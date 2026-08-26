@@ -17,13 +17,14 @@ const (
 // means DEVICE_INFO_6 inside a type-100 beacon, but BEACON_ACKS_6 inside a
 // type-102 beacon.
 const (
-	ModuleTimestamp    = 4  // TIMESTAMP_4, type-100 beacon, see modules/timestamp.go
-	ModuleDeviceInfo   = 6  // DEVICE_INFO_6, type-100 beacon, see modules/deviceinfo.go
-	ModuleGNSSInfo     = 38 // GNSS_INFO_38, type-100 beacon, see modules/gnss.go
+	ModuleTimestamp     = 4  // TIMESTAMP_4, type-100 beacon, see modules/timestamp.go
+	ModuleDeviceInfo    = 6  // DEVICE_INFO_6, type-100 beacon, see modules/deviceinfo.go
+	ModuleCellInfoWLoc  = 36 // CELLINFO_WLOC_36, type-100 beacon, see modules/cellinfo.go
+	ModuleCellInfoScell = 37 // CELLINFO_SCELL_37, type-100 beacon, see modules/cellinfo.go
+	ModuleGNSSInfo      = 38 // GNSS_INFO_38, type-100 beacon, see modules/gnss.go
 	ModuleLoginPubKey  = 1  // login handshake: raw X25519 public key, type-102 beacon
 	ModuleChaChaCipher = 2  // ChaCha20-Poly1305 wrapped inner beacon, type-102 beacon
 	ModuleBeaconAcks   = 6  // BEACON_ACKS_6: plaintext ack list, type-102 beacon
-	ModuleIOData       = 29 // IO_DATA_5, type-100 beacon, see modules/io.go
 )
 
 const headerSize = 3 + 2 + 2 + 2 // "LA5" + BeaconType + SeqID + PayloadLen

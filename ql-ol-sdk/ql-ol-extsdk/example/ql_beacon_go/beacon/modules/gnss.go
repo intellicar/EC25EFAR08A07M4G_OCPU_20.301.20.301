@@ -92,6 +92,37 @@ func (g GNSSInfo) Encode() []byte {
 	return buf
 }
 
+// encodeCompactGNSSFix builds the 9-field "compact fix" shape - last_updated
+// epoch, last_fix epoch, fix_quality, lat_lng_direction, latitude, longitude,
+// altitude, heading, speed_kmph - shared verbatim by CELLINFO_WLOC_36's
+// embedded GNSS block (see modules/cellinfo.go) and, per the LA5 spec, also
+// GNSS_INFO_LOCATION_39/MODULE_GNSS_INFO_LIVE_42 if those are ever added.
+// Defined once here since GNSSInfo already carries every field it needs, so
+// callers pass in the same value already gathered for GNSS_INFO_38 rather
+// than re-fetching GNSS separately.
+func encodeCompactGNSSFix(g GNSSInfo) []byte {
+	buf := make([]byte, 0, 26)
+	buf = appendU32(buf, g.LastUpdatedEpoch)
+	buf = appendU32(buf, g.LastFixEpoch)
+	buf = append(buf, g.FixQuality)
+
+	var dir uint8
+	if g.LatitudeDeg < 0 {
+		dir |= 1 << 0 // South
+	}
+	if g.LongitudeDeg < 0 {
+		dir |= 1 << 1 // West
+	}
+	buf = append(buf, dir)
+
+	buf = appendU32(buf, scaleAbsDegrees(g.LatitudeDeg))
+	buf = appendU32(buf, scaleAbsDegrees(g.LongitudeDeg))
+	buf = appendU32(buf, uint32(int32(math.Round(g.AltitudeM*100))))
+	buf = appendU16(buf, clampToUint16(math.Round(g.HeadingDeg*100)))
+	buf = appendU16(buf, clampToUint16(math.Round(g.SpeedMPS*3.6*100)))
+	return buf
+}
+
 // scaleAbsDegrees converts signed decimal degrees to the firmware's encoding:
 // |degrees| * 6,000,000 (equivalent to (deg*60 + min)*100000 + frac_min*100000
 // from the original NMEA-derived encoding, simplified since our source is
