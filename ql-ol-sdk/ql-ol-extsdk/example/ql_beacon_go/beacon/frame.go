@@ -23,6 +23,7 @@ const (
 	ModuleLoginPubKey  = 1  // login handshake: raw X25519 public key, type-102 beacon
 	ModuleChaChaCipher = 2  // ChaCha20-Poly1305 wrapped inner beacon, type-102 beacon
 	ModuleBeaconAcks   = 6  // BEACON_ACKS_6: plaintext ack list, type-102 beacon
+	ModuleIOData       = 29 // IO_DATA_5, type-100 beacon, see modules/io.go
 )
 
 const headerSize = 3 + 2 + 2 + 2 // "LA5" + BeaconType + SeqID + PayloadLen

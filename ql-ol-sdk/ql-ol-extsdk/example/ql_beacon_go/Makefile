@@ -6,6 +6,9 @@
 # itself (framing/CRC/crypto) is pure Go. Dependencies are vendored so
 # this builds without network access.
 BIN         := ql_beacon
+GO_EXTRA_LDLIBS := -lql_peripheral
 export GOFLAGS := -mod=vendor
 
 include ../go_common.mk
+
+
