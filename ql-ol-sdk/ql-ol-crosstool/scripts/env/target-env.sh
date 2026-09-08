@@ -1,4 +1,4 @@
-export QL_FAKEROOT=1
+#export QL_FAKEROOT=1
     
 if [[ ! -d "${QL_SDKPATH}/../ql-ol-rootfs" && -f "${QL_SDKPATH}/../ql-ol-rootfs.tar.gz" ]]; then
     printf "Extracting the rootfs..."

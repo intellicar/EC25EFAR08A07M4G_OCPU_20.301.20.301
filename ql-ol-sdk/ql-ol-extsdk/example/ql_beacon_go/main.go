@@ -257,12 +257,13 @@ func main() {
 		gnssStaleCh = make(chan string, 1)
 		go gnssWatchdogLoop(gnssWatchdogStop, gnssStaleCh)
 	}
-
+	startAccelSampling()
 	var lastTimestampUTCMs uint64
 	sendOnce := func() {
 		info := gatherDeviceInfo(pubKey)
 		gnss := getGNSSInfo()
 		io := getIOInfo()
+		accel := getAccelInfo()
 		// LAFV2 sends this as the first module of every beacon (see
 		// modules/timestamp.go) and nudges utctime by 1ms if it's identical
 		// to the last beacon's, so the server never sees two beacons with
@@ -280,6 +281,7 @@ func main() {
 		inner.AddModule(beacon.ModuleDeviceInfo, info.Encode())
 		inner.AddModule(beacon.ModuleGNSSInfo, gnss.Encode())
 		inner.AddModule(beacon.ModuleIOData, io.Encode())
+		inner.AddModule(beacon.ModuleAccMovInfo, accel.Encode())
 		if err := session.SendBeacon(inner.Finish()); err != nil {
 			logf("SendBeacon failed: %v, reconnecting", err)
 			session.Close()
